@@ -12,8 +12,9 @@ local GUI = require('GUI')
 
 -- Config --
 
+
 -- Control how many CPUs to use. 0 is unlimited, negative to keep some CPU free, between 0 and 1 to reserve a share,
--- and greater than 1 to allocate a fixed number.
+-- and greater than 1 to allocate a fixed  number.
 local allowedCpus = -2
 -- Maximum size of the crafting requests
 local maxBatch = 256
