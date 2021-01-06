@@ -6,7 +6,7 @@ local event = require('event')
 Manager = {}
 Manager.__index = Manager
 
-function Manager.new(configPath='/home/ae2.cfg',fullCheckInterval=20,craftingCheckInterval=10,allowedCpus=-2,maxBatch=128)
+function Manager.new(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
     local self = setmetatable({},Manager)
     local self.api = component['me_interface']
     local self.configPath=configPath

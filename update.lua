@@ -7,11 +7,7 @@ local files = {
     {path = "/home/test/tools.lua", link = "https://raw.githubusercontent.com/PIN-77/ae2manager/merge_branch/tools.lua"},
 }
 
-function write(path, mode, data)
-    local handle = io.open(path, mode)
-    handle:write(data)
-    handle:close()
-end
+
 
 function request(path)
     local handle, data, chunk = internet.request(path), ""
@@ -33,5 +29,7 @@ if not filesystem.exists("/home/test") then
 end
 
 for file = 1, #files do
-    write(files[file].path, "w", request(files[file].link))
+    local file=io.open(files[file].path, "w")
+    file:write(request(files[file].link))
+    file:close()
 end
