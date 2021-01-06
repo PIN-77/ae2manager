@@ -36,7 +36,6 @@ function Manager.loadRecipes(self)
 end
 
 function Manager.saveRecipes(self)
-    local 
     local tmpPath = self.configPath..'.tmp'
     local content = { recipes=tools.map(
         function t(e):
