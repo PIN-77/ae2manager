@@ -2,22 +2,23 @@ local tools = require('tools')
 local component = require('component')
 local computer = require('computer')
 local event = require('event')
+require('single')
 
-function Manager.new(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
-    local obj = {}
-    obj.api = component['me_interface']
-    obj.configPath=configPath or '/ae2.cfg'
-    obj.fullCheckInterval = fullCheckInterval or 50
-    obj.craftingCheckInterval = craftingCheckInterval or 10
-    obj.allowedCpus = allowedCpus or -2
-    obj.maxBatch = maxBatch or 128
-    obj.recipes = {}
-    obj.recipes = loadRecipes()
-    setmetatable(obj,self)
-    self.__index = self; return obj
-end
+Manager= M.class{new=function
+    (self,configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
+    self.api = component['me_interface']
+    self.configPath=configPath or '/ae2.cfg'
+    self.fullCheckInterval = fullCheckInterval or 50
+    self.craftingCheckInterval = craftingCheckInterval or 10
+    self.allowedCpus = allowedCpus or -2
+    self.maxBatch = maxBatch or 128
+    self.recipes = {}
+    --self.recipes = loadRecipes()
+    --setmetatable(obj,self)
+    --self.__index = self; return obj
+end,}
 
-function Manager.loadRecipes()
+function loadRecipes()
     print('Loading config from '..self.configPath)
     local f, err = io.open(self.configPath, 'r')
     if not f then
@@ -48,7 +49,7 @@ function Manager.saveRecipes()
     f:write(serialization.serialize(content))
     f:close()
 
-    filesystem.remove(configPath) -- may fail
+    filesystem.remove(configPath) -- may        fail
 
     local ok, err = os.rename(tmpPath, configPath)
     if not ok then error(err) end
