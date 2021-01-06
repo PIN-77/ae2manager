@@ -14,10 +14,10 @@ function Manager.init(configPath,fullCheckInterval,craftingCheckInterval,allowed
     self.allowedCpus = allowedCpus
     self.maxBatch = maxBatch
     self.recipes = {}
-    self.recipes = loadRecipes()
+
 end
 
-function Manager.loadRecipes(self)
+function Manager:loadRecipes(self)
     print('Loading config from '..self.configPath)
     local f, err = io.open(self.configPath, 'r')
     if not f then
@@ -34,7 +34,7 @@ function Manager.loadRecipes(self)
     print('Loaded '..#recipes..' recipes')
 end
 
-function Manager.saveRecipes()
+function Manager:saveRecipes()
     local tmpPath = self.configPath..'.tmp'
     local content = { recipes=tools.map(
         function (e) return {item = e.item, label = e.label, wanted = e.wanted} end,
@@ -51,7 +51,7 @@ function Manager.saveRecipes()
     if not ok then error(err) end
 end
 
-function Manager.MainLoop()
+function Manager:MainLoop()
     while true do
         local e1, e2 = event.pull(fullCheckInterval, 'ae2_loop')
         --log('AE2 loop in')
@@ -61,7 +61,7 @@ function Manager.MainLoop()
     end
 end
 
-function Manager.ae2Run(learnNewRecipes)
+function Manager:ae2Run(learnNewRecipes)
     local start = computer.uptime()
     updateRecipes(learnNewRecipes)
 
@@ -85,7 +85,7 @@ function Manager.ae2Run(learnNewRecipes)
     updateStatus(duration)
 end
 
-function Manager.findRecipeWork() --> yield (recipe, needed, craft)
+function Manager:findRecipeWork() --> yield (recipe, needed, craft)
     for i, recipe in ipairs(self.recipes) do
         if not(recipe.error or recipe.crafting) then
 
@@ -108,8 +108,8 @@ function Manager.findRecipeWork() --> yield (recipe, needed, craft)
     end
 end
 
-function Manager.hasFreeCpu()
-    local cpus = ae2.getCpus()
+function Manager:hasFreeCpu()
+    local cpus = Manager.api.getCpus()
     local free = 0
     for i, cpu in ipairs(cpus) do
         if not cpu.busy then free = free + 1 end
@@ -127,7 +127,7 @@ function Manager.hasFreeCpu()
     end
 end
 
-function Manager.updateRecipes(learnNewRecipes)
+function Manager:updateRecipes(learnNewRecipes)
     local start = computer.uptime()
 
     -- Index our recipes
