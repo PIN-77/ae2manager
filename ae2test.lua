@@ -3,10 +3,10 @@ local component = require('component')
 local computer = require('computer')
 local event = require('event')
 require('class')
-Manager = class()
+Manager = Class()
 
 
-function Manager.init(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
+function Manager.construct(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
     self.api = component['me_interface']
     self.configPath=configPath
     self.fullCheckInterval = fullCheckInterval
