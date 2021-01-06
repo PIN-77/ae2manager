@@ -9,8 +9,8 @@ local files = {
 
 function write(path, mode, data)
     local handle = filesystem.open(path, mode)
-    filesystem.write(handle, data)
-    filesystem.close(handle)
+    handle:write(data)
+    handle:close()
 end
 
 function request(path)
@@ -25,7 +25,7 @@ function request(path)
             break
         end
     end
-
+end
 
 
 if not filesystem.exists("/home/test") then
@@ -33,7 +33,5 @@ if not filesystem.exists("/home/test") then
 end
 
 for file = 1, #files do
-    if not filesystem.exists(files[file].path) then
-        write(files[file].path, "w", request(files[file].link))
-    end
+    write(files[file].path, "a", request(files[file].link))
 end
