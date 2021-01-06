@@ -1,39 +1,40 @@
-local component = require('component')
-local computer = require('computer')
-local coroutine = require('coroutine')
+require('ae2Class')
 local event = require('event')
-local filesystem = require('filesystem')
-local serialization = require('serialization')
-local thread = require('thread')
-local unicode = require('unicode')
+
+function main()
+
+    local ae2Manager=Manager.new()
+    ae2Manager.ae2Run(true)
 
 
+    -- Start some background tasks
+    local background = {}
+    table.insert(background, event.listen("key_up", function (key, address, char)
+        if char == string.byte('q') then
+            event.push('exit')
+        end
+    end))
+    --table.insert(background, event.listen("redraw", function (key) app:draw() end))
+    table.insert(background, event.listen("save", saveRecipes))
+    table.insert(background, event.timer(craftingCheckInterval, checkCrafting), math.huge)
+    table.insert(background, thread.create(ae2Loop))
+    table.insert(background, thread.create(function() app:start() end))
 
+    -- Block until we receive the exit signal
+    local _, err = event.pull("exit")
 
-
-print("Поиск МЭ интерфейса...")
-local ae2=component['me_interface']
-print("Используется интерфейс с адресом "..ae2['id'])
-
-print('Загрузка конфигурации из '..configPath)
-local f, err = io.open(configPath, 'r')
-
-function loadRecipes()
-    
-    
-    if not f then
-        -- usually the file does not exist, on the first run
-        print('Loading failed:', err)
-        return
+    for _, b in ipairs(background) do
+        if type(b) == 'table' and b.kill then
+            b:kill()
+        else
+            event.cancel(b)
+        end
     end
 
-    local content = serialization.unserialize(f:read('a'))
-
-    f:close()
-
-    recipes = content.recipes
-    print('Loaded '..#recipes..' recipes')
+    if err then
+        io.stderr:write(err)
+        os.exit(1)
+    else
+        os.exit(0)
+    end
 end
-
-
-

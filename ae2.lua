@@ -84,20 +84,6 @@ function main()
     end
 end
 
-function log(...)
-    -- TODO: reserve a part of the screen for logs
-    for i, v in ipairs{...} do
-        if i > 1 then io.stderr:write(' ') end
-        io.stderr:write(tostring(v))
-    end
-    io.stderr:write('\n')
-end
-
-function logRam(msg)
-    --free, total = computer.freeMemory(), computer.totalMemory()
-    --log(msg, 'RAM', (total - free) * 100 / total, '%')
-end
-
 function pretty(x)
     return serialization.serialize(x, true)
 end
@@ -135,6 +121,7 @@ function initAe2()
     end
 end
 
+
 function loadRecipes()
     print('Loading config from '..configPath)
     local f, err = io.open(configPath, 'r')
@@ -142,7 +129,7 @@ function loadRecipes()
         -- usually the file does not exist, on the first run
         print('Loading failed:', err)
         return
-    end
+    end 
 
     local content = serialization.unserialize(f:read('a'))
 
@@ -179,7 +166,6 @@ end
 function ae2Loop()
     while true do
         local e1, e2 = event.pull(fullCheckInterval, 'ae2_loop')
-        logRam('loop')
         --log('AE2 loop in')
         ae2Run(e2 == 'reload_recipes')
         --log('AE2 loop out')
@@ -191,8 +177,6 @@ end
 function ae2Run(learnNewRecipes)
     local start = computer.uptime()
     updateRecipes(learnNewRecipes)
-    logRam('recipes')
-    -- logRam('recipes (post-gc)')
 
     local finder = coroutine.create(findRecipeWork)
     while hasFreeCpu() do
@@ -203,7 +187,6 @@ function ae2Run(learnNewRecipes)
             local amount = math.min(needed, maxBatch)
             --log('Requesting ' .. amount .. ' ' .. recipe.label)
             recipe.crafting = craft.request(amount)
-            yield('yield crafting')
             checkFuture(recipe) -- might fail very quickly (missing resource, ...)
         else
             break
@@ -214,22 +197,8 @@ function ae2Run(learnNewRecipes)
     updateStatus(duration)
 end
 
-function checkCrafting()
-    for _, recipe in ipairs(recipes) do
-        if checkFuture(recipe) then
-            --log('checkCrafting event !')
-            event.push('ae2_loop')
-            return
-        end
-    end
-end
 
-function yield(msg)
-    --local gpu = tty.gpu()
-    --local _, h = gpu.getViewport()
-    --gpu.set(1, h, msg)
-    os.sleep()
-end
+
 
 function updateRecipes(learnNewRecipes)
     local start = computer.uptime()
@@ -245,7 +214,6 @@ function updateRecipes(learnNewRecipes)
     -- Get all items in the network
     local items, err = ae2.getItemsInNetwork()  -- takes a full tick (to sync with the main thread?)
     if err then error(err) end
-    --log('ae2.getItemsInNetwork', computer.uptime() - start, 'with', #items, 'items')
 
     -- Match all items with our recipes
     for _, item in ipairs(items) do
