@@ -1,4 +1,6 @@
-  
+local filesystem = require('filesystem')
+
+
 local files = {
     {path = "/home/test/server.lua", link = "https://raw.githubusercontent.com/PIN-77/ae2manager/merge_branch/server.lua"},
     {path = "/home/test/ae2Class.lua", link = "https://raw.githubusercontent.com/PIN-77/ae2manager/merge_branch/ae2Class.lua"},
