@@ -6,7 +6,7 @@ local thread = require('thread')
 
 function main()
 
-    local ae2Manager=Manager.new('/home/test/ae2.cfg',50,10,-2,128)
+    local ae2Manager=Manager.new('/ae2.cfg',50,10,-2,128)
     ae2Manager.ae2Run(true)
 
 

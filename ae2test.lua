@@ -36,10 +36,13 @@ end
 
 function Manager.saveRecipes()
     local tmpPath = self.configPath..'.tmp'
-    local content = { recipes=tools.map(
-        function (e) return {item = e.item, label = e.label, wanted = e.wanted} end,
-        self.recipes
-    )}
+    for _, recipe in ipairs(self.recipes) do
+        table.insert(content.recipes, {
+            item = recipe.item,
+            label = recipe.label,
+            wanted = recipe.wanted,
+        })
+    end
 
     local f = io.open(tmpPath, 'w')
     f:write(serialization.serialize(content))

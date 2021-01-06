@@ -1,13 +1,6 @@
 local tools
 
 
-function tools.map(f,list)
-    local r = {}
-    for k, v in ipairs(list) do
-        table.insert(r, f(v))
-    end
-    return r
-end
 
 function tools.enoughCpus(available, ongoing, free)
     if free == 0 then return false end
