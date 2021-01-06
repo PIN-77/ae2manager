@@ -1,5 +1,5 @@
 local filesystem = require('filesystem')
-
+local internet = require("internet")  
 
 local files = {
     {path = "/home/test/server.lua", link = "https://raw.githubusercontent.com/PIN-77/ae2manager/merge_branch/server.lua"},
@@ -13,6 +13,6 @@ end
 
 for file = 1, #files do
     if not filesystem.exists(files[file].path) then
-        write(files[file].path, "w", request(files[file].link))
+        write(files[file].path, "w", internet.request(files[file].link))
     end
 end
