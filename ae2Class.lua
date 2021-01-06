@@ -20,7 +20,7 @@ function Manager.new(configPath,fullCheckInterval,craftingCheckInterval,allowedC
     return self
 end
 
-function Manager.loadRecipes(self)
+function Manager.loadRecipes()
     print('Loading config from '..self.configPath)
     local f, err = io.open(self.configPath, 'r')
     if not f then
@@ -37,7 +37,7 @@ function Manager.loadRecipes(self)
     print('Loaded '..#recipes..' recipes')
 end
 
-function Manager.saveRecipes(self)
+function Manager.saveRecipes()
     local tmpPath = self.configPath..'.tmp'
     local content = { recipes=tools.map(
         function (e) return {item = e.item, label = e.label, wanted = e.wanted} end,
@@ -54,7 +54,7 @@ function Manager.saveRecipes(self)
     if not ok then error(err) end
 end
 
-function Manager.MainLoop(self)
+function Manager.MainLoop()
     while true do
         local e1, e2 = event.pull(fullCheckInterval, 'ae2_loop')
         --log('AE2 loop in')
@@ -64,7 +64,7 @@ function Manager.MainLoop(self)
     end
 end
 
-function Manager.ae2Run(learnNewRecipes,self)
+function Manager.ae2Run(learnNewRecipes)
     local start = computer.uptime()
     updateRecipes(learnNewRecipes)
 
@@ -88,7 +88,7 @@ function Manager.ae2Run(learnNewRecipes,self)
     updateStatus(duration)
 end
 
-function Manager.findRecipeWork(self) --> yield (recipe, needed, craft)
+function Manager.findRecipeWork() --> yield (recipe, needed, craft)
     for i, recipe in ipairs(self.recipes) do
         if not(recipe.error or recipe.crafting) then
 
@@ -130,7 +130,7 @@ function Manager.hasFreeCpu()
     end
 end
 
-function Manager.updateRecipes(learnNewRecipes,self)
+function Manager.updateRecipes(learnNewRecipes)
     local start = computer.uptime()
 
     -- Index our recipes
