@@ -1,5 +1,8 @@
 require('ae2Class')
 local event = require('event')
+local coroutine = require('coroutine')
+local filesystem = require('filesystem')
+local thread = require('thread')
 
 function main()
 
