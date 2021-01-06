@@ -13,9 +13,6 @@ Manager= M.class{new=function
     self.allowedCpus = allowedCpus or -2
     self.maxBatch = maxBatch or 128
     self.recipes = {}
-    --self.recipes = loadRecipes()
-    --setmetatable(obj,self)
-    --self.__index = self; return obj
 end,}
 
 function loadRecipes()
