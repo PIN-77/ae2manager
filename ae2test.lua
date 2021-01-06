@@ -2,22 +2,23 @@ local tools = require('tools')
 local component = require('component')
 local computer = require('computer')
 local event = require('event')
-require('class')
-Manager = Class()
 
-
-function Manager.construct(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
-    self.api = component['me_interface']
-    self.configPath=configPath
-    self.fullCheckInterval = fullCheckInterval
-    self.craftingCheckInterval = craftingCheckInterval
-    self.allowedCpus = allowedCpus
-    self.maxBatch = maxBatch
-    self.recipes = {}
-
+function Manager.new(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
+    local obj = {}
+    obj.api = component['me_interface']
+    obj.configPath=configPath or '/ae2.cfg'
+    obj.fullCheckInterval = fullCheckInterval or 50
+    obj.craftingCheckInterval = craftingCheckInterval or 10
+    obj.allowedCpus = allowedCpus or -2
+    obj.maxBatch = maxBatch or 128
+    obj.recipes = {}
+    obj.recipes = loadRecipes()
+    setmetatable(obj,self)
+    self.__index = self; return public
+    return self
 end
 
-function Manager:loadRecipes(self)
+function Manager.loadRecipes()
     print('Loading config from '..self.configPath)
     local f, err = io.open(self.configPath, 'r')
     if not f then
@@ -34,7 +35,7 @@ function Manager:loadRecipes(self)
     print('Loaded '..#recipes..' recipes')
 end
 
-function Manager:saveRecipes()
+function Manager.saveRecipes()
     local tmpPath = self.configPath..'.tmp'
     local content = { recipes=tools.map(
         function (e) return {item = e.item, label = e.label, wanted = e.wanted} end,
@@ -51,7 +52,7 @@ function Manager:saveRecipes()
     if not ok then error(err) end
 end
 
-function Manager:MainLoop()
+function Manager.MainLoop()
     while true do
         local e1, e2 = event.pull(fullCheckInterval, 'ae2_loop')
         --log('AE2 loop in')
@@ -61,7 +62,7 @@ function Manager:MainLoop()
     end
 end
 
-function Manager:ae2Run(learnNewRecipes)
+function Manager.ae2Run(learnNewRecipes)
     local start = computer.uptime()
     updateRecipes(learnNewRecipes)
 
@@ -85,7 +86,7 @@ function Manager:ae2Run(learnNewRecipes)
     updateStatus(duration)
 end
 
-function Manager:findRecipeWork() --> yield (recipe, needed, craft)
+function Manager.findRecipeWork() --> yield (recipe, needed, craft)
     for i, recipe in ipairs(self.recipes) do
         if not(recipe.error or recipe.crafting) then
 
@@ -108,8 +109,8 @@ function Manager:findRecipeWork() --> yield (recipe, needed, craft)
     end
 end
 
-function Manager:hasFreeCpu()
-    local cpus = Manager.api.getCpus()
+function Manager.hasFreeCpu()
+    local cpus = ae2.getCpus()
     local free = 0
     for i, cpu in ipairs(cpus) do
         if not cpu.busy then free = free + 1 end
@@ -127,7 +128,7 @@ function Manager:hasFreeCpu()
     end
 end
 
-function Manager:updateRecipes(learnNewRecipes)
+function Manager.updateRecipes(learnNewRecipes)
     local start = computer.uptime()
 
     -- Index our recipes

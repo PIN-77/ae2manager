@@ -9,11 +9,11 @@ Manager.__index = Manager
 function Manager.new(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
     local self = {}
     self.api = component['me_interface']
-    self.configPath=configPath
-    self.fullCheckInterval = fullCheckInterval
-    self.craftingCheckInterval = craftingCheckInterval
-    self.allowedCpus = allowedCpus
-    self.maxBatch = maxBatch
+    self.configPath=configPath or '/ae2.cfg'
+    self.fullCheckInterval = fullCheckInterval or 50
+    self.craftingCheckInterval = craftingCheckInterval or 10
+    self.allowedCpus = allowedCpus or -2
+    self.maxBatch = maxBatch or 128
     self.recipes = {}
     self.recipes = loadRecipes()
     setmetatable(self, Manager)
