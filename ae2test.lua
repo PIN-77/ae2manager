@@ -7,7 +7,6 @@ Manager = class()
 
 
 function Manager.init(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
-    local self = {}
     self.api = component['me_interface']
     self.configPath=configPath
     self.fullCheckInterval = fullCheckInterval
@@ -16,11 +15,9 @@ function Manager.init(configPath,fullCheckInterval,craftingCheckInterval,allowed
     self.maxBatch = maxBatch
     self.recipes = {}
     self.recipes = loadRecipes()
-    setmetatable(self, Manager)
-    return self
 end
 
-function Manager.loadRecipes()
+function Manager.loadRecipes(self)
     print('Loading config from '..self.configPath)
     local f, err = io.open(self.configPath, 'r')
     if not f then
