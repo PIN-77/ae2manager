@@ -14,8 +14,7 @@ function Manager.new(configPath,fullCheckInterval,craftingCheckInterval,allowedC
     obj.recipes = {}
     obj.recipes = loadRecipes()
     setmetatable(obj,self)
-    self.__index = self; return public
-    return self
+    self.__index = self; return obj
 end
 
 function Manager.loadRecipes()
