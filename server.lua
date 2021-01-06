@@ -1,4 +1,4 @@
-require('ae2Class')
+require('ae2test')
 local event = require('event')
 local coroutine = require('coroutine')
 local filesystem = require('filesystem')
