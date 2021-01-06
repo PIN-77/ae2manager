@@ -14,6 +14,7 @@ function Manager.new(configPath,fullCheckInterval,craftingCheckInterval,allowedC
     self.craftingCheckInterval = craftingCheckInterval
     self.allowedCpus = allowedCpus
     self.maxBatch = maxBatch
+    self.recipes = {}
     self.recipes = loadRecipes()
     setmetatable(self, Manager)
     return self
@@ -25,7 +26,7 @@ function Manager.loadRecipes(self)
     if not f then
         -- usually the file does not exist, on the first run
         print('Loading failed:', err)
-        return
+        return {}
     end 
 
     local content = serialization.unserialize(f:read('a'))

@@ -41,3 +41,4 @@ function main()
         os.exit(0)
     end
 end
+main()
