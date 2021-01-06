@@ -7,14 +7,15 @@ Manager = {}
 Manager.__index = Manager
 
 function Manager.new(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
-    local self = setmetatable({},Manager)
-    api = component['me_interface']
-    configPath=configPath
-    fullCheckInterval = fullCheckInterval
-    craftingCheckInterval = craftingCheckInterval
-    allowedCpus = allowedCpus
-    maxBatch = maxBatch
-    recipes = loadRecipes()
+    local self = {}
+    self.api = component['me_interface']
+    self.configPath=configPath
+    self.fullCheckInterval = fullCheckInterval
+    self.craftingCheckInterval = craftingCheckInterval
+    self.allowedCpus = allowedCpus
+    self.maxBatch = maxBatch
+    self.recipes = loadRecipes()
+    setmetatable(self, Manager)
     return self
 end
 
