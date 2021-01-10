@@ -21,7 +21,7 @@ local maxBatch = 256
 local fullCheckInterval = 50       -- full scan
 local craftingCheckInterval = 10     -- only check ongoing crafting
 -- Where to save the config
-local configPath = '/ae2.cfg'
+local configPath = '/home/test/ae2.cfg'
 
 -- Global State --
 
