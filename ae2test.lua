@@ -2,6 +2,7 @@ local tools = require('tools')
 local component = require('component')
 local computer = require('computer')
 local event = require('event')
+local serialization = require('serialization')
 
 function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
     self = {}
@@ -11,7 +12,7 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
     self.craftingCheckInterval = craftingCheckInterval or 10
     self.allowedCpus = allowedCpus or -2
     self.maxBatch = maxBatch or 128
-    self.recipes = {}
+    self.loadRecipes()
     
     function self.loadRecipes()
         print('Loading config from '..self.configPath)
@@ -19,7 +20,8 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
         if not f then
             -- usually the file does not exist, on the first run
             print('Loading failed:', err)
-            return {}
+            self.recipes={}
+            return false
         end 
     
         local content = serialization.unserialize(f:read('a'))
