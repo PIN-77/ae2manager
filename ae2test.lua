@@ -99,7 +99,7 @@ function initAe2()
     end
 
     for id, type in pairs(component.list()) do
-        print('Testing ' .. type .. ' ' .. id)
+        --print('Testing ' .. type .. ' ' .. id)
         local ok, p = pcall(test_ae2, id)
         if ok then
             print('Component ' .. type .. ' (' .. id .. ') is suitable')
@@ -178,6 +178,8 @@ function ae2Run(learnNewRecipes)
         local _, recipe, needed, craft = coroutine.resume(finder)
         if recipe then
             -- Request crafting
+            log('needed'..needed)
+            log(maxBatch)
             local amount = math.min(needed, maxBatch)
             log('Requesting ' .. amount .. ' ' .. recipe.label)
             recipe.crafting = craft.request(amount)
