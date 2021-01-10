@@ -21,7 +21,7 @@ local maxBatch = 256
 local fullCheckInterval = 50       -- full scan
 local craftingCheckInterval = 10     -- only check ongoing crafting
 -- Where to save the config
-local configPath = '/home/test/ae2.cfg'
+local configPath = '/ae2.cfg'
 
 -- Global State --
 
@@ -66,6 +66,7 @@ function main()
         end
     end
 
+    
     if err then
         io.stderr:write(err)
         os.exit(1)
