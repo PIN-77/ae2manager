@@ -84,8 +84,8 @@ function log(...)
 end
 
 function logRam(msg)
-    --free, total = computer.freeMemory(), computer.totalMemory()
-    --log(msg, 'RAM', (total - free) * 100 / total, '%')
+    free, total = computer.freeMemory(), computer.totalMemory()
+    log(msg, 'RAM', (total - free) * 100 / total, '%')
 end
 
 function pretty(x)
@@ -182,7 +182,7 @@ function ae2Run(learnNewRecipes)
     local start = computer.uptime()
     updateRecipes(learnNewRecipes)
     logRam('recipes')
-    -- logRam('recipes (post-gc)')
+    logRam('recipes (post-gc)')
 
     local finder = coroutine.create(findRecipeWork)
     while hasFreeCpu() do
@@ -191,7 +191,7 @@ function ae2Run(learnNewRecipes)
         if recipe then
             -- Request crafting
             local amount = math.min(needed, maxBatch)
-            --log('Requesting ' .. amount .. ' ' .. recipe.label)
+            log('Requesting ' .. amount .. ' ' .. recipe.label)
             recipe.crafting = craft.request(amount)
             yield('yield crafting')
             checkFuture(recipe) -- might fail very quickly (missing resource, ...)
@@ -230,12 +230,12 @@ function updateRecipes(learnNewRecipes)
         local key = itemKey(recipe.item, recipe.item.label ~= nil)
         index[key] = { recipe=recipe, matches={} }
     end
-    --log('recipe index', computer.uptime() - start)
+    log('recipe index', computer.uptime() - start)
 
     -- Get all items in the network
     local items, err = ae2.getItemsInNetwork()  -- takes a full tick (to sync with the main thread?)
     if err then error(err) end
-    --log('ae2.getItemsInNetwork', computer.uptime() - start, 'with', #items, 'items')
+    log('ae2.getItemsInNetwork', computer.uptime() - start, 'with', #items, 'items')
 
     -- Match all items with our recipes
     for _, item in ipairs(items) do
@@ -261,13 +261,13 @@ function updateRecipes(learnNewRecipes)
             index[key] = { recipe=recipe, matches={item} }
         end
     end
-    --log('group items', computer.uptime() - start)
+    log('group items', computer.uptime() - start)
 
     -- Check the recipes
     for _, entry in pairs(index) do
         local recipe = entry.recipe
         local matches = filter(entry.matches, function(e) return contains(e, recipe.item) end)
-        --log(recipe.label, 'found', #matches, 'matches')
+        log(recipe.label, 'found', #matches, 'matches')
         local craftable = false
         recipe.error = nil
 
