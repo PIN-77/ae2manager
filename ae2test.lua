@@ -110,14 +110,15 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
     end
     
     function self.hasFreeCpu()
-        cpus = self.api.getCpus()
+        self.cpus = self.api.getCpus()
+        print(self.api.getCpus())
         local free = 0
-        for i, cpu in ipairs(cpus) do
+        for _, cpu in ipairs(self.cpus) do
             if not cpu.busy then free = free + 1 end
         end
         end
         local ongoing = 0
-        for _, recipe in ipairs(recipes) do
+        for _, recipe in ipairs(self.recipes) do
             if recipe.crafting then ongoing = ongoing + 1 end
         end
     
