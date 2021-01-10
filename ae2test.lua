@@ -5,7 +5,7 @@ local event = require('event')
 local serialization = require('serialization')
 
 function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
-    self = {}
+    local self = {}
     self.api = component['me_interface']
     self.configPath=configPath or '/ae2.cfg'
     self.fullCheckInterval = fullCheckInterval or 50
