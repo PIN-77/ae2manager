@@ -170,9 +170,9 @@ function ae2Loop()
     while true do
         local e1, e2 = event.pull(fullCheckInterval, 'ae2_loop')
         logRam('loop')
-        --log('AE2 loop in')
+        log('AE2 loop in')
         ae2Run(e2 == 'reload_recipes')
-        --log('AE2 loop out')
+        log('AE2 loop out')
         event.push('redraw')
     end
 end
