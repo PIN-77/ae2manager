@@ -4,9 +4,9 @@ local computer = require('computer')
 local event = require('event')
 serialization = require('serialization')
 
+api=component['me_interface']
 function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
     local self = {}
-    self.api = component['me_interface']
     self.configPath=configPath or '/ae2.cfg'
     self.fullCheckInterval = fullCheckInterval or 50
     self.craftingCheckInterval = craftingCheckInterval or 10
@@ -93,7 +93,7 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
                 local needed = recipe.wanted - recipe.stored
                 if needed <= 0 then
     
-                    local craftables, err = self.api.getCraftables(recipe.item)
+                    local craftables, err = api.getCraftables(recipe.item)
                     --log('get_craftable', inspect(craftables))
                     if err then
                         recipe.error = 'ae2.getCraftables ' .. tostring(err)
@@ -110,8 +110,8 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
     end
     
     function self.hasFreeCpu()
-        self.cpus = self.api.getCpus()
-        print(self.api.getCpus())
+        self.cpus = api.getCpus()
+        print(api.getCpus())
         local free = 0
         for _, cpu in ipairs(self.cpus) do
             if not cpu.busy then free = free + 1 end
@@ -142,7 +142,7 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
         --log('recipe index', computer.uptime() - start)
     
         -- Get all items in the network
-        local items, err = self.api.getItemsInNetwork()  -- takes a full tick (to sync with the main thread?)
+        local items, err = api.getItemsInNetwork()  -- takes a full tick (to sync with the main thread?)
         if err then error(err) end
     
         -- Match all items with our recipes
