@@ -2,7 +2,7 @@ local tools = require('tools')
 local component = require('component')
 local computer = require('computer')
 local event = require('event')
-local serialization = require('serialization')
+serialization = require('serialization')
 
 function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,maxBatch)
     local self = {}
