@@ -29,7 +29,7 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
         f:close()
     
         self.recipes = content.recipes
-        print('Loaded '..#recipes..' recipes')
+        print('Loaded '..#self.recipes..' recipes')
     end
     
     function self.saveRecipes()
