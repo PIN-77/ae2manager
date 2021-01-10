@@ -13,7 +13,7 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
     self.maxBatch = maxBatch or 128
     self.recipes = {}
     
-    function loadRecipes()
+    function self.loadRecipes()
         print('Loading config from '..self.configPath)
         local f, err = io.open(self.configPath, 'r')
         if not f then
