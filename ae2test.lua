@@ -51,7 +51,7 @@ function main()
     end))
     table.insert(background, event.listen("save", saveRecipes))
     table.insert(background, event.timer(craftingCheckInterval, checkCrafting, math.huge))
-    table.insert(background, thread.create(ae2Loop)
+    table.insert(background, thread.create(ae2Loop))
     table.insert(background, thread.create(function() app:start() end))
 
     -- Block until we receive the exit signal
