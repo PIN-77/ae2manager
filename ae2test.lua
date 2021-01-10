@@ -108,7 +108,7 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
     end
     
     function self.hasFreeCpu()
-        local cpus = ae2.getCpus()
+        local cpus = self.api.getCpus()
         local free = 0
         for i, cpu in ipairs(cpus) do
             if not cpu.busy then free = free + 1 end
@@ -201,6 +201,7 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
             event.push('save')
         end
     end
+    return self
 end
 
-return Manager
+--return Manager
