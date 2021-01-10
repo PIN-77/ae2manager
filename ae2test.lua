@@ -12,7 +12,7 @@ function Manager(configPath,fullCheckInterval,craftingCheckInterval,allowedCpus,
     self.craftingCheckInterval = craftingCheckInterval or 10
     self.allowedCpus = allowedCpus or -2
     self.maxBatch = maxBatch or 128
-    self.loadRecipes()
+    loadRecipes()
     
     function self.loadRecipes()
         print('Loading config from '..self.configPath)
