@@ -459,7 +459,7 @@ end
 function freeMemory()
     local result = 0
     for i = 1, 10 do
-      result = math.max(result, c.freeMemory())
+      result = math.max(result, computer.freeMemory())
       os.sleep(0)
     end
     return result
