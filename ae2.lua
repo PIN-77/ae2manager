@@ -1,31 +1,10 @@
-local component = require('component')
-local computer = require('computer')
-local coroutine = require('coroutine')
-local event = require('event')
-local filesystem = require('filesystem')
-local serialization = require('serialization')
-local thread = require('thread')
-local tty = require('tty')
-local unicode = require('unicode')
 local GUI = require('GUI')
 
-
-
-local C_BACKGROUND = 0x0F2231 -- фон
-local C_STATUS_BAR = 0x0F2231 -- фон пбс
-local C_STATUS_TEXT = 0xC4D0E0 -- текст
-local C_STATUS_PRESSED = 0xFF0000 -- активный текст
-local C_BADGE = 0x0F2231 -- фон скроллбара через одну
-local C_BADGE_ERR = 0x445565 -- ошибка элементов
-local C_BADGE_BUSY = 0x445565 -- корректные элементов
-local C_BADGE_SELECTED = 0x445565 -- выделение элементов скроллбара
-local C_BADGE_TEXT = 0xC4D0E0 -- цвет текста
-local C_INPUT = 0xFFFFFF -- поиск
-local C_INPUT_TEXT = 0x1E1E1E
-local C_SCROLLBAR = 0x99CCBB -- скролл полоска
-local C_SCROLLBAR_BACKGROUND = 0xFFFFFF -- фон скролбара
-
 function buildGui()
+    local app = GUI.application()
+    local statusBar = app:addChild(GUI.container(1, 1, 100, 50))
+
+--[[function buildGui()
     local app = GUI.application()
     local statusBar = app:addChild(GUI.container(1, 1, app.width, 1))
     local window = app:addChild(GUI.container(1, 1 + statusBar.height, app.width, app.height - statusBar.height))
@@ -196,9 +175,9 @@ function buildGui()
     end
 	
     return app
-end
+end]]
 
-function attachScrollbar(obj)
+--[[function attachScrollbar(obj)
     local width = (obj.width > 60) and 2 or 1
     obj.width = obj.width - width
     local bar = GUI.scrollBar(obj.x+obj.width, obj.y, width, obj.height, C_SCROLLBAR_BACKGROUND, C_SCROLLBAR,
@@ -214,7 +193,7 @@ function attachScrollbar(obj)
     end)
 
     return bar
-end
+end]]
 
 application:draw(true)
 application:start()
