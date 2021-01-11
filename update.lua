@@ -1,5 +1,5 @@
-local filesystem = require('filesystem')
-local internet = require("internet")  
+local shell = require('shell')
+ 
 
 local files = {
     {path = "/home/test/ae2CLI.lua", link = "https://raw.githubusercontent.com/PIN-77/ae2manager/merge_branch/ae2CLI.lua"},
