@@ -3,6 +3,7 @@ local GUI = require('GUI')
 function buildGui()
     local app = GUI.application()
     local statusBar = app:addChild(GUI.container(1, 1, 100, 50))
+end
 
 --[[function buildGui()
     local app = GUI.application()
