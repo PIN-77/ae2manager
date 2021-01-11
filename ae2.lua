@@ -196,5 +196,5 @@ end]]
     return bar
 end]]
 
-application:draw(true)
-application:start()
+app:draw(true)
+app:start()
