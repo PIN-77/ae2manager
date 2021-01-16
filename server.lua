@@ -221,17 +221,4 @@ function restart()
     end
 end
 
-local args,ops = shell.parse()
-print(args)
-print(ops)
-
-if args[0]=='start' then
-    start()
-elseif args[0]=='restart' then
-    restart()
-elseif args[0]=='stop' then
-    stop()
-else
-    print('run with argument')
-    print('Ex.: server start')
-end
+start()
