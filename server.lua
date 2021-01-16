@@ -30,7 +30,7 @@ end
 function loadTerminals()
     if checkCfgFile('/home/terminals.cfg') then
 		local f = io.open('/home/terminals.cfg','r')
-		if file:read() then
+		if f:read() then
 			local terms = serialization.unserialize(f:read())
 		else
 			local terms = {}
