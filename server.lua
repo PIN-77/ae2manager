@@ -17,24 +17,30 @@ loadRecipes()
 --    terminals[terminals[terminal]], terminals[terminal] = true, nil
 --end 
 
+local function checkPath(path)
+    if not filesystem.exists(path) then
+        filesystem.makeDirectory(path)
+    end
+end
+
 function checkCfgFile(path)
-	if not filesystem.exists(path) then
+    if not filesystem.exists(path) then
         local f=io.open(path,'w')
         f:close()
         return false
     else 
         return true
     end
-end	
+end 
 
 function loadTerminals()
     if checkCfgFile('/home/terminals.cfg') then
-		local f = io.open('/home/terminals.cfg','r')
-		if f:read() then
-			local terms = serialization.unserialize(f:read())
-		else
-			local terms = {}
-		end
+        local f = io.open('/home/terminals.cfg','r')
+        if f:read() then
+            local terms = serialization.unserialize(f:read())
+        else
+            local terms = {}
+        end
         f:close()
     else
         local terms = {}
@@ -43,45 +49,45 @@ function loadTerminals()
 end
     
 function registerTerminal(address)
-	local f = io.open('/home/terminals.cfg','w')
-	terminals[address] = true
-	f:write(serialization.serialize(terminals))
+    local f = io.open('/home/terminals.cfg','w')
+    terminals[address] = true
+    f:write(serialization.serialize(terminals))
     file:close()
 end
 
 
 function getTime(type)
-	local file = io.open("/tmp/time", "w")
-	file:write("time")
-	file:close() 
-	local timestamp = filesystem.lastModified("/tmp/time") / 1000 + 3600 * 3
+    local file = io.open("/tmp/time", "w")
+    file:write("time")
+    file:close() 
+    local timestamp = filesystem.lastModified("/tmp/time") / 1000 + 3600 * 3
 
-	if type == "full" then
-		return os.date("%d.%m.%Y %H:%M:%S", timestamp)
-	elseif type == "log" then
-		return os.date("[%H:%M:%S] ", timestamp)
-	elseif type == "filesystem" then
-		return os.date("%d.%m.%Y", timestamp)
-	elseif type == "raw" then
-		return timestamp
-	end
+    if type == "full" then
+        return os.date("%d.%m.%Y %H:%M:%S", timestamp)
+    elseif type == "log" then
+        return os.date("[%H:%M:%S] ", timestamp)
+    elseif type == "filesystem" then
+        return os.date("%d.%m.%Y", timestamp)
+    elseif type == "raw" then
+        return timestamp
+    end
 end
 
 function log(data, customPath)
-	local timestamp = getTime("raw")
-	local time = os.date("[%H:%M:%S] ", timestamp)
-	local date = os.date("%d.%m.%Y", timestamp)
-	checkPath("/home/logs/")
-	local path = "/home/logs/" .. os.date("%d.%m.%Y", timestamp)
-	checkPath(path)
-	local data = time .. data
+    local timestamp = getTime("raw")
+    local time = os.date("[%H:%M:%S] ", timestamp)
+    local date = os.date("%d.%m.%Y", timestamp)
+    checkPath("/home/logs/")
+    local path = "/home/logs/" .. os.date("%d.%m.%Y", timestamp)
+    checkPath(path)
+    local data = time .. data
 
-	if customPath then
-		path = path .. customPath
-	else
-		path = path .. "/main.log"
-	end
-	local days = {date .. "/", os.date("%d.%m.%Y/", timestamp - 86400), os.date("%d.%m.%Y/", timestamp - 172800), os.date("%d.%m.%Y/", timestamp - 259200)}
+    if customPath then
+        path = path .. customPath
+    else
+        path = path .. "/main.log"
+    end
+    local days = {date .. "/", os.date("%d.%m.%Y/", timestamp - 86400), os.date("%d.%m.%Y/", timestamp - 172800), os.date("%d.%m.%Y/", timestamp - 259200)}
     for day = 1, #days do 
         days[days[day]], days[day] = true, nil
     end
@@ -92,125 +98,125 @@ function log(data, customPath)
         end
     end
 
-	local file = io.open(path, "a")
-	file:write(data .. "\n")
-	file:close()
+    local file = io.open(path, "a")
+    file:write(data .. "\n")
+    file:close()
 end
 
 function send(address, data)
-	modem.send(address, port, data)
+    modem.send(address, port, data)
 end
 
 function responseHandler(data, address)
-	log("DATA " .. data)
-	local userdata, err = serialization.unserialize(data)
+    log("DATA " .. data)
+    local userdata, err = serialization.unserialize(data)
 
-	if userdata then
-		if terminals[address] then
-			if userdata.log then
-				if userdata.log.mPath and userdata.log.data then
-					log(userdata.log.data, userdata.log.mPath)
-				end
-			end
-
-		    if userdata.method then
-		    		if userdata.method == "login" then
-		    			local success = login(userdata.name, userdata.server)
-		    			if success then
-		    				local responseMessage = {
-		    					code = 200,
-		    					message = "Login successfully",
-		    					userdata = success,
-		    					feedbacks = readFeedbacks()	
-		    				}
-		    				send(address, serialization.serialize(responseMessage))
-		    			else
-		    				send(address, '{code = 500, message = "Unable to login, unexpected error"}')
-		    			end
-		    		elseif userdata.method == "merge" then
-		    			if userdata.toMerge then
-		    				updateUser(userdata.name, userdata.toMerge)
-		    				send(address, '{code = 200, message = "Merged successfully"}')
-		    			else
-		    				send(address, '{code = 422, message = "toMerge is nil"}')
-						end
-					elseif userdata.method == "getRecipes" then
-						updateRecipes(true)
-						local responseMessage={
-							code = 200,
-							message = 'Update successfully',
-							recipes = recipes
-						}
-						send(address,serialization.serialize(responseMessage))
-					
-		    		else
-		    			send(address, '{code = 422, message = "Bad method"}')
-		    		end
-		    else
-		    	send(address, '{code = 422, message = "Bad method"}')
+    if userdata then
+        if terminals[address] then
+            if userdata.log then
+                if userdata.log.mPath and userdata.log.data then
+                    log(userdata.log.data, userdata.log.mPath)
+                end
             end
-		elseif userdata.method == 'register' then
-			if not userdata.pw==password then
-				send(address,'{code = 401, message = "Unauthorized"}')
-				local logData = "Auth attempt! " .. serialization.serialize(userdata)
-				log(logData)
-			else
-				registerTerminal(address)
-				log('Registered: ' .. address)
-			end
-		else
-			send(address, '{code = 422, message = "This modem is not whitelisted"}')
-			local logData = "Access attempt! " .. serialization.serialize(userdata)
-			log(logData)
+
+            if userdata.method then
+                    if userdata.method == "login" then
+                        local success = login(userdata.name, userdata.server)
+                        if success then
+                            local responseMessage = {
+                                code = 200,
+                                message = "Login successfully",
+                                userdata = success,
+                                feedbacks = readFeedbacks() 
+                            }
+                            send(address, serialization.serialize(responseMessage))
+                        else
+                            send(address, '{code = 500, message = "Unable to login, unexpected error"}')
+                        end
+                    elseif userdata.method == "merge" then
+                        if userdata.toMerge then
+                            updateUser(userdata.name, userdata.toMerge)
+                            send(address, '{code = 200, message = "Merged successfully"}')
+                        else
+                            send(address, '{code = 422, message = "toMerge is nil"}')
+                        end
+                    elseif userdata.method == "getRecipes" then
+                        updateRecipes(true)
+                        local responseMessage={
+                            code = 200,
+                            message = 'Update successfully',
+                            recipes = recipes
+                        }
+                        send(address,serialization.serialize(responseMessage))
+                    
+                    else
+                        send(address, '{code = 422, message = "Bad method"}')
+                    end
+            else
+                send(address, '{code = 422, message = "Bad method"}')
+            end
+        elseif userdata.method == 'register' then
+            if not userdata.pw==password then
+                send(address,'{code = 401, message = "Unauthorized"}')
+                local logData = "Auth attempt! " .. serialization.serialize(userdata)
+                log(logData)
+            else
+                registerTerminal(address)
+                log('Registered: ' .. address)
+            end
+        else
+            send(address, '{code = 422, message = "This modem is not whitelisted"}')
+            local logData = "Access attempt! " .. serialization.serialize(userdata)
+            log(logData)
         end
         
-	elseif err then
-		log("Unable to parse table, err: " .. err)
-	end
+    elseif err then
+        log("Unable to parse table, err: " .. err)
+    end
 end
 
 function messageHandler(event, _, address, rport, _, data)
-	if port == rport then 
-		responseHandler(data, address) 
-	end
+    if port == rport then 
+        responseHandler(data, address) 
+    end
 end
 
 function start()
-	if ripmarketIsRunning then
-		io.stderr:write("Daemon is running!")
-	else
-		terminals = loadTerminals()
-		ripmarketIsRunning = true
-		if modem.isOpen(port) then
-			io.stderr:write("Port " .. port .. " is busy!")
-		else
-			if modem.open(port) then
-				local success = "RipMarket started on port " .. port .. "!"
-				print(success)
-				log(success)
-				event.listen("modem_message", messageHandler)
-			else
-				io.stderr:write("Unable to open port " .. port)
-			end
-		end
-	end
+    if ripmarketIsRunning then
+        io.stderr:write("Daemon is running!")
+    else
+        terminals = loadTerminals()
+        ripmarketIsRunning = true
+        if modem.isOpen(port) then
+            io.stderr:write("Port " .. port .. " is busy!")
+        else
+            if modem.open(port) then
+                local success = "RipMarket started on port " .. port .. "!"
+                print(success)
+                log(success)
+                event.listen("modem_message", messageHandler)
+            else
+                io.stderr:write("Unable to open port " .. port)
+            end
+        end
+    end
 end
 
 function stop()
-	if not ripmarketIsRunning then
-		io.stderr:write("Daemon already stopped!")
-	else
-		ripmarketIsRunning = false
-		modem.close(port)
-		event.ignore("modem_message", messageHandler)
-		print("Daemon is offline...")
-		return true
-	end
+    if not ripmarketIsRunning then
+        io.stderr:write("Daemon already stopped!")
+    else
+        ripmarketIsRunning = false
+        modem.close(port)
+        event.ignore("modem_message", messageHandler)
+        print("Daemon is offline...")
+        return true
+    end
 end
 
 function restart()
-	if stop() then
-		start()
-	end
+    if stop() then
+        start()
+    end
 end
 start()
