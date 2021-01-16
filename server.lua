@@ -4,7 +4,7 @@ local unicode = require("unicode")
 local filesystem = require("filesystem")
 local serialization = require("serialization")
 local ae2CLI = require('ae2CLI')
-
+local shell = require('shell')
 
 local modem = component.modem
 local port = 2828
@@ -219,4 +219,17 @@ function restart()
         start()
     end
 end
-start()
+
+local args,ops = shell.parse()
+
+
+if args[0]=='start' then
+    start()
+elseif args[0]=='restart' then
+    restart()
+elseif args[0]=='stop' then
+    stop()
+else
+    print('run with argument')
+    print('Ex.: server start')
+end
