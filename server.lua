@@ -17,7 +17,7 @@ ae2CLI.loadRecipes()
 --    terminals[terminals[terminal]], terminals[terminal] = true, nil
 --end 
 
-local function loadTerminals():
+local function loadTerminals()
     if checkCfgFile('/home/terminals.cfg') then
         local f = io.open('/home/terminals.cfg','r')
         local terms = serialization.unserialize(file:read())
