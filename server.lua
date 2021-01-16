@@ -20,7 +20,7 @@ loadRecipes()
 function checkCfgFile(path)
 	if not filesystem.exists(path) then
         local f=io.open(path,'w')
-        file:close()
+        f:close()
         return false
     else 
         return true
@@ -29,9 +29,13 @@ end
 
 function loadTerminals()
     if checkCfgFile('/home/terminals.cfg') then
-        local f = io.open('/home/terminals.cfg','r')
-        local terms = serialization.unserialize(file:read())
-        file:close()
+		local f = io.open('/home/terminals.cfg','r')
+		if file:read() then
+			local terms = serialization.unserialize(f:read())
+		else
+			local terms = {}
+		end
+        f:close()
     else
         local terms = {}
     end
