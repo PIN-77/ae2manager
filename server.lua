@@ -9,7 +9,7 @@ local ae2CLI = require('ae2CLI')
 local modem = component.modem
 local port = 2828
 local password = '1234'
-local terminals = loadTerminals()
+
 
 local ae2 = ae2CLI.initAe2()
 ae2CLI.loadRecipes()
@@ -174,6 +174,7 @@ function start()
 	if ripmarketIsRunning then
 		io.stderr:write("Daemon is running!")
 	else
+		terminals = loadTerminals()
 		ripmarketIsRunning = true
 		if modem.isOpen(port) then
 			io.stderr:write("Port " .. port .. " is busy!")
