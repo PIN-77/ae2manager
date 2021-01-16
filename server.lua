@@ -33,8 +33,8 @@ function checkCfgFile(path)
 end 
 
 function loadTerminals()
-    if checkCfgFile('/home/terminals.cfg') then
-        local f = io.open('/home/terminals.cfg','r')
+    if checkCfgFile('/home/test/terminals.cfg') then
+        local f = io.open('/home/test/terminals.cfg','r')
         if f:read() then
             local terms = serialization.unserialize(f:read())
         else
@@ -45,13 +45,6 @@ function loadTerminals()
         local terms = {}
     end
     return terms
-end
-    
-function registerTerminal(address)
-    local f = io.open('/home/terminals.cfg','w')
-    terminals[address] = true
-    f:write(serialization.serialize(terminals))
-    file:close()
 end
 
 
@@ -192,7 +185,7 @@ function start()
             io.stderr:write("Port " .. port .. " is busy!")
         else
             if modem.open(port) then
-                local success = "RipMarket started on port " .. port .. "!"
+                local success = "Server started on port " .. port .. "!"
                 print(success)
                 log(success)
                 event.listen("modem_message", messageHandler)
