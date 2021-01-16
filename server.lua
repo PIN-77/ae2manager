@@ -209,3 +209,4 @@ function restart()
 		start()
 	end
 end
+start()
