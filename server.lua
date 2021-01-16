@@ -17,7 +17,7 @@ loadRecipes()
 --    terminals[terminals[terminal]], terminals[terminal] = true, nil
 --end 
 
-local function checkCfgFile(path)
+function checkCfgFile(path)
 	if not filesystem.exists(path) then
         local f=io.open(path,'w')
         file:close()
@@ -27,7 +27,7 @@ local function checkCfgFile(path)
     end
 end	
 
-local function loadTerminals()
+function loadTerminals()
     if checkCfgFile('/home/terminals.cfg') then
         local f = io.open('/home/terminals.cfg','r')
         local terms = serialization.unserialize(file:read())
@@ -38,7 +38,7 @@ local function loadTerminals()
     return terms
 end
     
-local function registerTerminal(address)
+function registerTerminal(address)
 	local f = io.open('/home/terminals.cfg','w')
 	terminals[address] = true
 	f:write(serialization.serialize(terminals))
@@ -46,7 +46,7 @@ local function registerTerminal(address)
 end
 
 
-local function getTime(type)
+function getTime(type)
 	local file = io.open("/tmp/time", "w")
 	file:write("time")
 	file:close() 
@@ -63,7 +63,7 @@ local function getTime(type)
 	end
 end
 
-local function log(data, customPath)
+function log(data, customPath)
 	local timestamp = getTime("raw")
 	local time = os.date("[%H:%M:%S] ", timestamp)
 	local date = os.date("%d.%m.%Y", timestamp)
@@ -93,11 +93,11 @@ local function log(data, customPath)
 	file:close()
 end
 
-local function send(address, data)
+function send(address, data)
 	modem.send(address, port, data)
 end
 
-local function responseHandler(data, address)
+function responseHandler(data, address)
 	log("DATA " .. data)
 	local userdata, err = serialization.unserialize(data)
 
@@ -165,7 +165,7 @@ local function responseHandler(data, address)
 	end
 end
 
-local function messageHandler(event, _, address, rport, _, data)
+function messageHandler(event, _, address, rport, _, data)
 	if port == rport then 
 		responseHandler(data, address) 
 	end
