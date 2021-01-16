@@ -11,8 +11,7 @@ local port = 2828
 local password = '1234'
 
 
-initAe2()
-loadRecipes()
+
 --for terminal = 1, #terminals do 
 --    terminals[terminals[terminal]], terminals[terminal] = true, nil
 --end 
@@ -185,6 +184,8 @@ function start()
     if ripmarketIsRunning then
         io.stderr:write("Daemon is running!")
     else
+        initAe2()
+        loadRecipes()
         terminals = loadTerminals()
         ripmarketIsRunning = true
         if modem.isOpen(port) then
@@ -221,7 +222,8 @@ function restart()
 end
 
 local args,ops = shell.parse()
-
+print(args)
+print(ops)
 
 if args[0]=='start' then
     start()
