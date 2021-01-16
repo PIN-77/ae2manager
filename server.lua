@@ -17,6 +17,16 @@ loadRecipes()
 --    terminals[terminals[terminal]], terminals[terminal] = true, nil
 --end 
 
+local function checkCfgFile(path)
+	if not filesystem.exists(path) then
+        local f=io.open(path,'w')
+        file:close()
+        return false
+    else 
+        return true
+    end
+end	
+
 local function loadTerminals()
     if checkCfgFile('/home/terminals.cfg') then
         local f = io.open('/home/terminals.cfg','r')
@@ -35,15 +45,6 @@ local function registerTerminal(address)
     file:close()
 end
 
-local function checkCfgFile(path)
-	if not filesystem.exists(path) then
-        local f=io.open(path,'w')
-        file:close()
-        return false
-    else 
-        return true
-    end
-end
 
 local function getTime(type)
 	local file = io.open("/tmp/time", "w")
