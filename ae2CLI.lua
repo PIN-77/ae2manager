@@ -29,8 +29,7 @@ configPath = '/ae2.cfg'
 recipes = {}
 -- various system status data
 status = {}
--- AE2 proxy
-ae2 = {}
+
 
 -- Functions --
 

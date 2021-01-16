@@ -11,8 +11,8 @@ local port = 2828
 local password = '1234'
 
 
-local ae2 = ae2CLI.initAe2()
-ae2CLI.loadRecipes()
+initAe2()
+loadRecipes()
 --for terminal = 1, #terminals do 
 --    terminals[terminals[terminal]], terminals[terminal] = true, nil
 --end 
@@ -130,7 +130,7 @@ local function responseHandler(data, address)
 		    				send(address, '{code = 422, message = "toMerge is nil"}')
 						end
 					elseif userdata.method == "getRecipes" then
-						ae2CLI.updateRecipes(true)
+						updateRecipes(true)
 						local responseMessage={
 							code = 200,
 							message = 'Update successfully',
