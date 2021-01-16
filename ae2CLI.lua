@@ -14,23 +14,23 @@ local GUI = require('GUI')
 
 -- Control how many CPUs to use. 0 is unlimited, negative to keep some CPU free, between 0 and 1 to reserve a share,
 -- and greater than 1 to allocate a fixed  number.
-local allowedCpus = -2
+allowedCpus = -2
 -- Maximum size of the crafting requests
-local maxBatch = 256
+maxBatch = 256
 -- How often to check the AE system, in second
-local fullCheckInterval = 50       -- full scan
-local craftingCheckInterval = 10     -- only check ongoing crafting
+fullCheckInterval = 50       -- full scan
+craftingCheckInterval = 10     -- only check ongoing crafting
 -- Where to save the config
-local configPath = '/ae2.cfg'
+configPath = '/ae2.cfg'
 
 -- Global State --
 
 -- array of recipe like { item, label, wanted, [current, crafting] }
-local recipes = {}
+recipes = {}
 -- various system status data
-local status = {}
+status = {}
 -- AE2 proxy
-local ae2
+ae2 = {}
 
 -- Functions --
 
@@ -466,5 +466,3 @@ function freeMemory()
     return result
 end
 
--- Start the program
-main()
