@@ -557,7 +557,6 @@ function buildGui()
     override(itemListPanel, 'draw', function (super, self, ...)
         self.selectedItem = -1
         self.children = {}
-	self.scrollBar.value = self.scrollBar.minimumValue
 	
         local selection = recipes
         local filter = itemListSearch.text
