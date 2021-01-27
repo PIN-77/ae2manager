@@ -564,6 +564,7 @@ function buildGui()
         if filter and filter ~= '' then
             filter = unicode.lower(filter)
             selection = {}
+            self.scrollBar.value = self.scrollBar.minimumValue
             for _, recipe in ipairs(recipes) do
                 -- Patterns seem very limited, no case-insensitive option
                 if unicode.lower(recipe.label):find(filter) then
